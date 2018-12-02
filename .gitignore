@@ -25,3 +25,6 @@ hs_err_pid*
 #intellij files
 adventofcode.iml
 .idea/*
+
+#out files
+out/**
