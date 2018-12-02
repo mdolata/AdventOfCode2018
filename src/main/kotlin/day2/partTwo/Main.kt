@@ -39,11 +39,11 @@ fun findSimilarIDs(list: List<String>): Pair<String, String> {
 }
 
 fun wordsAreSimilar(word: String, word2: String): Boolean {
-    var similars = 0
+    var similar = 0
     for (pair in word.zip(word2).listIterator()) {
         if (pair.first == pair.second)
-            similars++
+            similar++
     }
 
-    return similars == word.length - 1
+    return similar == word.length - 1
 }
