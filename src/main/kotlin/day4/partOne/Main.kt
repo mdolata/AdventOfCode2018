@@ -16,10 +16,33 @@ fun main(args: Array<String>) {
 
     val records = fillOutGuards(prepareList(stream))
 
-    val mostAsleepGuard = mostAsleepGuard(records)
-    println(mostAsleepGuard)
+    val mostAsleepGuard: String
+    mostAsleepGuard = mostAsleepGuard(records)
+    println(mostAsleepHourForGuard(records, mostAsleepGuard))
 
-    mostAsleepHourForGuard(records, mostAsleepGuard)
+    val result = guardMostFrequentlyAsleepOnTheSameMinute(records)
+    println(result)
+
+    println(result.first.toInt() * result.second)
+
+}
+
+fun guardMostFrequentlyAsleepOnTheSameMinute(records: List<Triple<Event, LocalDateTime, String>>): Pair<String, Int> {
+    val maxBy = records.map { it.third }
+            .distinct()
+            .map { Pair(it, minutesMap(records, it)) }
+            .map { Pair(it.first, getMaxValue(it.second)) }
+            .maxBy { it.second.second }
+    val maxBy1: Pair<String, Pair<Int, Int>> = maxBy ?: Pair("", Pair(0,0))
+
+    return Pair(maxBy1.first, maxBy1.second.first)
+}
+
+fun getMaxValue(map: MutableMap<Int, Int>): Pair<Int, Int> {
+    return map
+            .toList()
+            .sortedBy { -it.second }
+            .getOrElse(0) { 0 to 0 }
 }
 
 fun prepareList(records: Stream<String>): List<Triple<Event, LocalDateTime, String>> {
@@ -45,6 +68,12 @@ fun fillOutGuards(records: List<Triple<Event, LocalDateTime, String>>): List<Tri
 }
 
 fun mostAsleepHourForGuard(records: List<Triple<Event, LocalDateTime, String>>, guard: String): Int {
+    val map = minutesMap(records, guard)
+
+    return map.toList().sortedBy { (_, value) -> -value }.first().first
+}
+
+private fun minutesMap(records: List<Triple<Event, LocalDateTime, String>>, guard: String): MutableMap<Int, Int> {
     val list = records
             .filter { it.third == guard }
             .filter { it.first != Event.START }
@@ -75,8 +104,7 @@ fun mostAsleepHourForGuard(records: List<Triple<Event, LocalDateTime, String>>, 
         map.put(r.first, orDefault + r.second)
 
     }
-
-    return map.toList().sortedBy { (_, value) -> -value }.first().first
+    return map
 }
 
 

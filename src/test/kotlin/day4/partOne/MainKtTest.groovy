@@ -5,6 +5,7 @@ import spock.lang.Specification
 
 
 import static day4.partOne.MainKt.fillOutGuards
+import static day4.partOne.MainKt.guardMostFrequentlyAsleepOnTheSameMinute
 import static day4.partOne.MainKt.mostAsleepGuard
 import static day4.partOne.MainKt.mostAsleepHourForGuard
 import static day4.partOne.MainKt.prepareList
@@ -18,16 +19,24 @@ class MainKtTest extends Specification {
 
         when:
         def guard = mostAsleepGuard(list)
-        def minute = mostAsleepHourForGuard(list, guard)
-
-
         then:
         assert guard == expectGuard
+
+        when:
+        def minute = mostAsleepHourForGuard(list, guard)
+        then:
         assert minute == expectMinute
 
 
+        when:
+        def pair = guardMostFrequentlyAsleepOnTheSameMinute(list)
+        then:
+        assert pair.first == expectGuard2
+        assert pair.second == expectMinute2
+
+
         where:
-        input                                                | expectGuard | expectMinute
+        input                                                | expectGuard | expectMinute | expectGuard2 | expectMinute2
         ["[1518-11-01 00:00] Guard #10 begins shift",
          "[1518-11-01 00:05] falls asleep",
          "[1518-11-01 00:25] wakes up",
@@ -44,7 +53,7 @@ class MainKtTest extends Specification {
          "[1518-11-04 00:46] wakes up",
          "[1518-11-05 00:03] Guard #99 begins shift",
          "[1518-11-05 00:45] falls asleep",
-         "[1518-11-05 00:55] wakes up"]                     | "10" | 24
+         "[1518-11-05 00:55] wakes up"]                     | "10" | 24 | "99" | 45
 
     }
 }
